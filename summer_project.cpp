@@ -277,19 +277,39 @@ void deleteCourse(){
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-void viewAllCourses(){
-  ifstream in("course.txt");
-  string name,code;
-  int total ,seats;
+void viewAllCourses() {
+    ifstream in("course.txt");
+    if (!in.is_open()) {
+        cout << "Error: Could not open course.txt!" << endl;
+        return;
+    }
 
-  cout<<"All Courses list"<<endl;
+    cout << "All Courses list:" << endl;
 
-  while(in >> code){
-    getline(in, name ,',');
-    in>>total>>seats;
-    cout<< code <<","<< name <<","<< total <<","<< seats<<endl;
-  }
-  in.close();
+    string line;
+    while (getline(in, line)) { // Read the entire line
+        stringstream ss(line);  // Process the line
+        string code, name;
+        int total, seats;
+
+        // Extract code (until first comma)
+        getline(ss, code, ',');
+
+        // Extract name (until next comma)
+        getline(ss, name, ',');
+
+        // Read total and seats (skip comma automatically)
+        char comma; // To handle the comma between numbers (if any)
+        ss >> total >> comma >> seats;
+
+        // Display the course details
+        cout << "Code: " << code 
+             << ", Name: " << name 
+             << ", Total: " << total 
+             << ", Seats: " << seats << endl;
+    }
+
+    in.close();
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
